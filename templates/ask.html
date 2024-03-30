@@ -1,114 +1,38 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Askme</title>
-    <link rel="stylesheet" href="../static/css/bootstrap.css">
-</head>
-<body>
-    <nav class="navbar bg-light">
-        <div class="container-fluid">
-            <div>
-                <a class="navbar-brand" href="index.html">
-                    AskPupkin
-                </a>
-            </div>
-            <div>
-                <form role="search">
-                    <input placeholder="Search">
-                    <button>
-                        ASK!
-                    </button>
-                </form>
-            </div>
-            <div class="d-flex gap-3">
-                <div class="border">
-                    <img src="img.jpg" alt="Avatar" width="50px" height="50px">
-                </div>
-                <div>
-                    <div>
-                        <p>Dr.Pepper</p>
-                    </div>
-                    <div>
-                        <a href="./settings.html">settings</a>
-                        <a href="./logout.html">log out</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </nav>
-    <main>
+{% extends "layouts/base.html" %}
+{% block content %}
+    <h2 class="mx-5 my-3">
+        New Question
+    </h2>
+    <form class="need-validation">
         <div class="row">
-            <div class="col-8">
-                <h2 class="mx-5 my-3">
-                    New Question
-                </h2>
-                <form class="need-validation">
-                    <div class="row">
-                        <div class="col-1 text-end m-3">
-                            <span>Title</span>
-                        </div>
-                        <div class="col p-2">
-                            <input type="text" class="form-control" value="How to build a moon park?" required>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-1 text-end m-3">
-                            <span>Text</span>
-                        </div>
-                        <div class="col p-2">
-                            <textarea class="form-control" style="resize: none;" rows="10" maxlength="500" required>Really, how? Have no idea about it.</textarea>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-1 text-end m-3">
-                            <span>Tags</span>
-                        </div>
-                        <div class="col p-2">
-                            <input type="text" class="form-control" value="moon, park, puzzle">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-1 m-3"></div>
-                        <div class="col-2 p-2">
-                            <button type="submit" class="form-control">ASK!</button>
-                        </div>
-                    </div>
-                </form>
+            <div class="col-1 text-end m-3">
+                <span>Title</span>
             </div>
-            <div class="col-4">
-                <h2 class="my-3">Popular tags</h2>
-                <div>
-                    <span class="badge text-bg-primary">perl</span>
-                    <span class="badge text-bg-secondary">Python</span>
-                    <span class="badge text-bg-success">TechnoPark</span>
-                    <span class="badge text-bg-danger">MySQL</span>
-                    <span class="badge text-bg-warning">django</span>
-                    <span class="badge text-bg-info">Mail.ru</span>
-                    <span class="badge text-bg-light">Voloshin</span>
-                    <span class="badge text-bg-dark">Firefox</span>
-                </div>
-                <h2 class="my-3">Best Members</h2>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item">
-                        <a href="">Mr. Freeman</a>
-                    </li>
-                    <li class="list-group-item">
-                        <a href="">Dr. House</a>
-                    </li>
-                    <li class="list-group-item">
-                        <a href="">Bender</a>
-                    </li>
-                    <li class="list-group-item">
-                        <a href="">Queen Victoria</a>
-                    </li>
-                    <li class="list-group-item">
-                        <a href="">V. Pupkin</a>
-                    </li>
-                </ul>
+            <div class="col p-2">
+                <input type="text" class="form-control" value="How to build a moon park?" required>
             </div>
         </div>
-    </main>
-</body>
-</html>
+        <div class="row">
+            <div class="col-1 text-end m-3">
+                <span>Text</span>
+            </div>
+            <div class="col p-2">
+                <textarea class="form-control" style="resize: none;" rows="10" maxlength="500" required>Really, how? Have no idea about it.</textarea>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-1 text-end m-3">
+                <span>Tags</span>
+            </div>
+            <div class="col p-2">
+                <input type="text" class="form-control" value="moon, park, puzzle">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-1 m-3"></div>
+            <div class="col-2 p-2">
+                <button type="submit" class="form-control">ASK!</button>
+            </div>
+        </div>
+    </form>
+{% endblock content %}

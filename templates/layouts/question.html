@@ -1,0 +1,41 @@
+{% load static %}
+
+<div class="card m-3">
+    <div class="row">
+        <div style="width: 120px;">
+            <div class="m-1">
+                <img src="{% static 'img/img.jpg' %}" alt="" height="100px" class="w-100">
+            </div>
+        </div>
+        <div class="col">
+            <h5>
+                <a href="{% url "question" question.id %}">{{ question.title }}</a>
+            </h5>
+            <p>{{ question.text }}</p>
+        </div>
+    </div>
+    <div class="row align-items-center">
+        <div style="width: 120px;">
+            <div class="input-group p-1">
+                <input type="number" value="5" class="form-control w-100"> 
+            </div>
+        </div>
+        <div class="col">
+            <div class="row">
+                <div class="col-3">
+                    <a href="{% url "question" question.id %}">answer (3)</a>
+                </div>
+                <span class="col">
+                    <span>
+                        Tags:
+                        {% for tag in question.tags %}
+                            <a href="{% url "tag" tag %}">
+                                {{ tag  }}
+                            </a>
+                        {% endfor %}
+                    </span>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
