@@ -22,6 +22,7 @@ QUESTIONS = [
             "text": f"this is answer number {i}",
         } for i in range(10)
         ],
+        "answers_number": 10,
     } for i in range(100)
 ]
 
