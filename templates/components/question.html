@@ -1,6 +1,6 @@
 {% load static %}
 
-<div class="card m-4">
+<div class="card m-3 p-2">
     <div class="row">
         <div style="width: 120px;">
             <div class="m-1">
@@ -9,7 +9,7 @@
         </div>
         <div class="col">
             <h5>
-                {{ question.title }}
+                <a href="{% url "question" question.id %}">{{ question.title }}</a>
             </h5>
             <p>{{ question.text }}</p>
         </div>
@@ -17,11 +17,14 @@
     <div class="row align-items-center">
         <div style="width: 120px;">
             <div class="input-group p-1">
-                <input type="number" value="5" class="form-control w-100"> 
+                <input type="number" value="{{ question.likes }}" class="form-control w-100"> 
             </div>
         </div>
         <div class="col">
             <div class="row">
+                <div class="col-3">
+                    <a href="{% url "question" question.id %}">answer ({{ question.answers_number }})</a>
+                </div>
                 <span class="col">
                     <span>
                         Tags:

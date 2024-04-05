@@ -1,17 +1,17 @@
 {% extends "layouts/base.html" %}
 {% block content %}
-    {% include "layouts/question_details.html" %}
+    {% include "components/question_details.html" %}
     <div class="border m-3"></div>
     {% for answer in answers %}
-        {% include "layouts/answer.html" %}
+        {% include "components/answer.html" %}
     {% endfor %}
-    {% include "layouts/pagination.html" with page_obj=answers %}
+    {% include "components/pagination.html" with page_obj=answers %}
  
     <div class="border mx-3"></div>
     <div class="p-3">
         <form class="need-validation">
             <textarea class="form-control" placeholder="Enter your answer here." style="resize: none; height: 100px;" required></textarea>
-            <button class="btn btn-secondary my-3">Answer!</button>
+            <button class="btn btn-primary my-3">Answer!</button>
         </form>
     </div>
 {% endblock content %}

@@ -6,7 +6,7 @@
         <a href="{% url "hot_questions" %}">Hot questions</a>
     </div>
     {% for question in questions %}
-        {% include "layouts/question.html"%}
+        {% include "components/question.html"%}
     {% endfor %}
-    {% include "layouts/pagination.html" with page_obj=questions %}
+    {% include "components/pagination.html" with page_obj=questions %}
 {% endblock %}
