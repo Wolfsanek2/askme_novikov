@@ -74,7 +74,7 @@ def paginate(obj_list, request, per_page=10):
     except:
         page_obj = paginator.page(1)
         return page_obj
-    if page_num > 0:
+    if page_num > 0 and page_num <= paginator.num_pages:
         page_obj = paginator.page(page_num)
     else:
         page_obj = paginator.page(1)
