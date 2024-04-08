@@ -8,23 +8,29 @@ from django.db import models
 # Ответ – содержание, автор, дата написания, флаг правильного ответа, рейтинг.
 # Тег – слово тега.
 
-class Tags(models.Model):
+class Tag(models.Model):
     name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    email = models.EmailField()
-    nickname = models.CharField(max_length=255)
-    password = models.CharField(max_length=255)
     avatar = models.ImageField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.user.get_username()
 
 class Question(models.Model):
     title = models.CharField(max_length=255)
     text = models.TextField()
-    author = models.ForeignKey(Profile)
-    tags = models.ManyToManyField(Tags)
+    author = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    tags = models.ManyToManyField(Tag)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
 
 class QuestionsRating(models.Model):
     VALUE_CHOICES = [
@@ -34,11 +40,18 @@ class QuestionsRating(models.Model):
     value = models.SmallIntegerField(choices=VALUE_CHOICES)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     author = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return f"Rating {self.value} for {self.question} from {self.author}"
 
 class Answer(models.Model):
     text = models.TextField()
-    author = models.ForeignKey(Profile)
-    created_ar = models.DateTimeField(auto_now_add=True)
+    author = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"answer for {self.question} from {self.author}"
 
 class AnswersRating(models.Model):
     VALUE_CHOICES = [
@@ -46,5 +59,8 @@ class AnswersRating(models.Model):
         (-1, -1),
     ]
     value = models.SmallIntegerField(choices=VALUE_CHOICES)
-    answer = models.ForeignKey(Answer)
-    author = models.ForeignKey(Profile)
+    answer = models.ForeignKey(Answer, on_delete=models.CASCADE)
+    author = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return f"Rating {self.value} for {self.answer} from {self.author}"
