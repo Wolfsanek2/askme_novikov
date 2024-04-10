@@ -5,6 +5,7 @@
 - Python 3.10.11
 - Django 5.0.3
 - Bootstrap v5.2.3
+- БД - MySQL
 
 ## Установка и запуск проекта
 1. Создание виртуальной среды Python в директории проекта
@@ -15,6 +16,8 @@ python -m venv askme_venv
 
 source askme_venv/bin/activate
 
-3. Запуск сервера
+3. Создание БД, настройка БД в файле setting.py
+
+4. Запуск сервера
 
 python manage.py runserver
