@@ -16,7 +16,7 @@ python -m venv askme_venv
 
 source askme_venv/bin/activate
 
-3. Создание БД, настройка БД в файле setting.py
+3. Создание БД, настройка переменной DATABASES в файле setting.py
 
 4. Запуск сервера
 
