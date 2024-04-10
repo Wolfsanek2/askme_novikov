@@ -62,7 +62,6 @@ def signup(request):
     return render(request, "signup.html")
 
 def paginate(query_set, request, per_page=10):
-    print(type(query_set))
     page_num = request.GET.get("page", 1)
     paginator = Paginator(query_set, per_page)
     try:
