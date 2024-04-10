@@ -1,64 +1,59 @@
-# from django.http import HttpResponse
+from django.http.response import HttpResponseNotFound
 from django.shortcuts import render
 from django.core.paginator import Paginator
-
+from app.models import *
 from random import randint
+
+from app import models
 
 # Create your views here.
 
-QUESTIONS = [
-    {
-        "id": i,
-        "title": f"Question {i}",
-        "text": f"This is question number {i}",
-        "likes": randint(0,10),
-        "tags": [
-            f"tag{randint(0,10)}",
-            f"tag{randint(0,10)}",
-            f"tag{randint(0,10)}",
-        ],
-        "answers": [
-        {
-            "id": i,
-            "text": f"this is answer number {i}",
-        } for i in range(10)
-        ],
-        "answers_number": 10,
-    } for i in range(100)
-]
-
 def index(request):
-    return render(request, "index.html", {"questions": paginate(QUESTIONS, request, per_page=20)})
+    questions = models.Question.objects.get_new()
+    question_list = paginate(questions, request, per_page=20)
+    context = {"questions": question_list}
+    return render(request, "index.html", context)
 
 def hot_questions(request):
-    return render(request, "hot_questions.html", {"questions": paginate(QUESTIONS, request, per_page=20)})
+    questions = models.Question.objects.get_hot()
+    question_list = paginate(questions, request, per_page=20)
+    context = {"questions": question_list}
+    return render(request, "hot_questions.html", context)
 
 def settings(request):
     return render(request, "settings.html")
 
 def logout(request):
-    return render(request, "index.html", {"questions": paginate(QUESTIONS, request, per_page=20)})
+    questions = Question.objects.get_new()
+    context = {"questions": paginate(questions, request, per_page=20)}
+    return render(request, "index.html", context)
 
-def tag(request, tag):
-    questions = []
-    for i in range(len(QUESTIONS)):
-        if tag in QUESTIONS[i].get("tags"):
-            questions.append(QUESTIONS[i])
-    return render(request, "tag.html", {
-        "questions": paginate(questions, request, per_page=20),
-        "tag": tag,
-        }
-    )
+def tag(request, tag_name):
+    questions = Question.objects.get_by_tag(tag_name)
+    if not(questions):
+        return HttpResponseNotFound("page no found")
+    questions_list = paginate(questions, request, per_page=20)
+    context = {
+        "questions": questions_list,
+        "tag": tag_name,
+    }
+    return render(request, "tag.html", context)
 
 def ask(request):
     return render(request, "ask.html")
 
 def question(request, question_id):
-    return render(request, "question.html", {
-        "question": QUESTIONS[int(question_id)],
-        "answers": paginate(QUESTIONS[int(question_id)].get("answers"), request, per_page=30),
-        }
-    )
+    try:
+        question = Question.objects.get(id=question_id)
+    except Question.DoesNotExist:
+        return HttpResponseNotFound("page not found")
+    answers = Answer.objects.get_best_for_question(question_id)
+    answers_list = paginate(answers, request, per_page=30)
+    context = {
+        "question": question,
+        "answers": answers_list,
+    }
+    return render(request, "question.html", context)
 
 def login(request):
     return render(request, "login.html")
@@ -66,9 +61,10 @@ def login(request):
 def signup(request):
     return render(request, "signup.html")
 
-def paginate(obj_list, request, per_page=10):
+def paginate(query_set, request, per_page=10):
+    print(type(query_set))
     page_num = request.GET.get("page", 1)
-    paginator = Paginator(obj_list, per_page)
+    paginator = Paginator(query_set, per_page)
     try:
         page_num = int(page_num)
     except:

@@ -17,7 +17,7 @@
     <div class="row align-items-center">
         <div style="width: 120px;">
             <div class="input-group p-1">
-                <input type="number" value="{{ question.likes }}" class="form-control w-100"> 
+                <input type="number" value="{{ question.rating }}" class="form-control w-100">
             </div>
         </div>
         <div class="col">
@@ -25,7 +25,7 @@
                 <span class="col">
                     <span>
                         Tags:
-                        {% for tag in question.tags %}
+                        {% for tag in question.tags.all %}
                             <a href="{% url "tag" tag %}">
                                 {{ tag  }}
                             </a>

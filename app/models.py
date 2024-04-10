@@ -22,12 +22,33 @@ class Profile(models.Model):
     def __str__(self):
         return self.user.get_username()
 
+class QuestionManager(models.Manager):
+    def get_new(self):
+        return self.order_by("created_at").reverse()
+    
+    def get_hot(self):
+        return self.order_by("rating").reverse()
+    
+    def get_by_tag(self, tag_name):
+        return self.filter(tags__name=tag_name)
+    
+    def get_rating(self, *args, **kwargs):
+        question = self.get(*args, **kwargs)
+        ratings = question.questionsrating_set.all()
+        value = 0
+        for rating in ratings:
+            value += rating.value
+        return value
+
 class Question(models.Model):
     title = models.CharField(max_length=255)
     text = models.TextField()
     author = models.ForeignKey(Profile, on_delete=models.CASCADE)
     tags = models.ManyToManyField(Tag)
+    rating = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    objects = QuestionManager()
 
     def __str__(self):
         return self.title
@@ -44,11 +65,26 @@ class QuestionsRating(models.Model):
     def __str__(self):
         return f"Rating {self.value} for {self.question} from {self.author}"
 
+class AnswerManager(models.Manager):
+    def get_best_for_question(self, question_id):
+        return self.filter(question_id=question_id).order_by("rating").reverse()
+    
+    def get_rating(self, *args, **kwargs):
+        answer = self.get(*args, **kwargs)
+        ratings = answer.answersrating_set.all()
+        value = 0
+        for rating in ratings:
+            value += rating.value
+        return value
+
 class Answer(models.Model):
     text = models.TextField()
     author = models.ForeignKey(Profile, on_delete=models.CASCADE)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    rating = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    objects = AnswerManager()
 
     def __str__(self):
         return f"answer for {self.question} from {self.author}"
