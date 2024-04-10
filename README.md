@@ -16,16 +16,20 @@ python -m venv askme_venv
 
 source askme_venv/bin/activate
 
-3. Создание БД, настройка переменной DATABASES в файле setting.py
+3. Загрузка требуемых зависимостей
 
-4. Выполнение миграций
+pip install -r requirements.txt
+
+4. Создание БД, настройка переменной DATABASES в файле setting.py
+
+5. Выполнение миграций
 
 python manage.py migrate
 
-5. Наполнение БД
+6. Наполнение БД
 
 python manage.py fill_db ratio
 
-6. Запуск сервера
+7. Запуск сервера
 
 python manage.py runserver
