@@ -62,14 +62,9 @@ def signup(request):
     return render(request, "signup.html")
 
 def paginate(query_set, request, per_page=10):
-    page_num = request.GET.get("page", 1)
+    page_num = request.GET.get("page", "1")
     paginator = Paginator(query_set, per_page)
-    try:
-        page_num = int(page_num)
-    except:
-        page_obj = paginator.page(1)
-        return page_obj
-    if page_num > 0 and page_num <= paginator.num_pages:
+    if page_num > "0" and page_num <= str(paginator.num_pages):
         page_obj = paginator.page(page_num)
     else:
         page_obj = paginator.page(1)
