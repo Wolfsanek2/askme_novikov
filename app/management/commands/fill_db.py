@@ -142,7 +142,7 @@ class Command(BaseCommand):
                         question_rating = QuestionsRating(
                             value=1 if randint(0,1) == 1 else -1,
                             question=questions_batch[int(j/10)],
-                            author=profiles_batch[int(j/100)],
+                            author=profiles_batch[j % len(profiles_batch)],
                         )
                         yield question_rating
                     i += 1
@@ -157,7 +157,7 @@ class Command(BaseCommand):
                 if not(questions_list):
                     break
                 for question in questions_list:
-                    question.rating = Question.objects.get_rating(id=question.id)
+                    question.rating = Question.objects.get_rating(question.id)
                 Question.objects.bulk_update(questions_list, ["rating"])
                 i += 1
             print("Questions rating calculated")
@@ -177,7 +177,7 @@ class Command(BaseCommand):
                         answers_rating = AnswersRating(
                             value=1 if randint(0,1) == 1 else -1,
                             answer=answers_batch[j],
-                            author=profiles_batch[int(j/100)],
+                            author=profiles_batch[j % len(profiles_batch)],
                         )
                         yield answers_rating
                     i += 1
@@ -192,7 +192,7 @@ class Command(BaseCommand):
                 if not(answers_list):
                     break
                 for answer in answers_list:
-                    answer.rating = Answer.objects.get_rating(id=answer.id)
+                    answer.rating = Answer.objects.get_rating(answer.id)
                 Answer.objects.bulk_update(answers_list, ["rating"])
                 i += 1
             print("Answers rating calculated")

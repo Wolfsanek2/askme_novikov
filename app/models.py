@@ -32,13 +32,9 @@ class QuestionManager(models.Manager):
     def get_by_tag(self, tag_name):
         return self.filter(tags__name=tag_name)
     
-    def get_rating(self, *args, **kwargs):
-        question = self.get(*args, **kwargs)
-        ratings = question.questionsrating_set.all()
-        value = 0
-        for rating in ratings:
-            value += rating.value
-        return value
+    def get_rating(self, question_id):
+        rating_sum = QuestionsRating.objects.filter(question__id=question_id).aggregate(sum=models.Sum("value"))
+        return rating_sum.get("sum", 0)
 
 class Question(models.Model):
     title = models.CharField(max_length=255)
@@ -61,6 +57,9 @@ class QuestionsRating(models.Model):
     value = models.SmallIntegerField(choices=VALUE_CHOICES)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     author = models.ForeignKey(Profile, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ("question", "author")
     
     def __str__(self):
         return f"Rating {self.value} for {self.question} from {self.author}"
@@ -69,13 +68,9 @@ class AnswerManager(models.Manager):
     def get_best_for_question(self, question_id):
         return self.filter(question_id=question_id).order_by("rating").reverse()
     
-    def get_rating(self, *args, **kwargs):
-        answer = self.get(*args, **kwargs)
-        ratings = answer.answersrating_set.all()
-        value = 0
-        for rating in ratings:
-            value += rating.value
-        return value
+    def get_rating(self, answer_id):
+        rating_sum = AnswersRating.objects.filter(answer__id=answer_id).aggregate(sum=models.Sum("value"))
+        return rating_sum.get("sum", 0)
 
 class Answer(models.Model):
     text = models.TextField()
@@ -98,5 +93,8 @@ class AnswersRating(models.Model):
     answer = models.ForeignKey(Answer, on_delete=models.CASCADE)
     author = models.ForeignKey(Profile, on_delete=models.CASCADE)
     
+    class Meta:
+        unique_together = ("answer", "author")
+
     def __str__(self):
         return f"Rating {self.value} for {self.answer} from {self.author}"

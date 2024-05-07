@@ -29,9 +29,11 @@ def logout(request):
     return render(request, "index.html", context)
 
 def tag(request, tag_name):
+    try:
+        Tag.objects.get(name = tag_name)
+    except:
+        return HttpResponseNotFound("page not found")
     questions = Question.objects.get_by_tag(tag_name)
-    if not(questions):
-        return HttpResponseNotFound("page no found")
     questions_list = paginate(questions, request, per_page=20)
     context = {
         "questions": questions_list,
@@ -64,8 +66,8 @@ def signup(request):
 def paginate(query_set, request, per_page=10):
     page_num = request.GET.get("page", "1")
     paginator = Paginator(query_set, per_page)
-    if page_num > "0" and page_num <= str(paginator.num_pages):
+    try:
         page_obj = paginator.page(page_num)
-    else:
+    except:
         page_obj = paginator.page(1)
     return page_obj
