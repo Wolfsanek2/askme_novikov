@@ -30,7 +30,8 @@ class Command(BaseCommand):
 
             users_gen = (
                 User(
-                    username=f"nickname_{i}",
+                    username=f"user_login_{i}",
+                    first_name=f"nickname {i}",
                     email=f"user_{i}@gmail.com",
                     password=f"password_{i}",
                 ) for i in range(profiles_number)
@@ -42,7 +43,7 @@ class Command(BaseCommand):
                 i = 0
                 while True:
                     users_batch = User.objects
-                    users_batch = users_batch.filter(username__contains="nickname")
+                    users_batch = users_batch.filter(first_name__contains="nickname")
                     users_batch = users_batch[i*batch_size:(i + 1)*batch_size]
                     if not users_batch:
                         break

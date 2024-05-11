@@ -9,8 +9,9 @@
  
     <div class="border mx-3"></div>
     <div class="p-3">
-        <form class="need-validation">
-            <textarea class="form-control" placeholder="Enter your answer here." style="resize: none; height: 100px;" required></textarea>
+        <form class="need-validation" method="post">
+            {% csrf_token %}
+            <textarea class="form-control {% if form.text.errors %}is-invalid{% endif %}" name="{{ form.text.html_name }}" placeholder="Enter your answer here." style="resize: none; height: 100px;" maxlength="form.text.field.max_length" required>{{ form.text.value|default_if_none:"" }}</textarea>
             <button class="btn btn-primary my-3">Answer!</button>
         </form>
     </div>

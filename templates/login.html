@@ -6,13 +6,14 @@
             Log In
         </h2>
     </div>
-    <form class="need-validation">
+    <form class="need-validation" method="post">
+        {% csrf_token %}
         <div class="row my-3">
             <div class="col-2 text-end">
                 <span>Login</span>
             </div>
             <div class="col-4">
-                <input type="text" placeholder="Enter your login here" class="form-control" required>
+                <input type="text" name="{{ form.username.html_name }}" value="{{ form.username.value|default_if_none:"" }}" placeholder="Enter your login here" class="form-control {% if form.non_field_errors %}is-invalid{% endif %}" maxlength="{{ form.username.field.max_length }}" required>
             </div>
         </div>
         <div class="row my-3">
@@ -20,9 +21,9 @@
                 <span>Password</span>
             </div>
             <div class="col-4">
-                <input type="password" placeholder="Enter your login here" class="form-control is-invalid" value="password" required>
+                <input type="password" name="{{ form.password.html_name }}" placeholder="Enter your password here" class="form-control {% if form.non_field_errors %}is-invalid{% endif %}" maxlength="{{ form.password.field.max_length }}" required>
                 <div class="invalid-feedback">
-                    Wrong password!
+                    {{ form.non_field_errors }}
                 </div>
             </div>
         </div>

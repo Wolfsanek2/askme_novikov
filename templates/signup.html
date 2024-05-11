@@ -6,13 +6,17 @@
             Registration
         </h2>
     </div>
-    <form class="need-validation">
-        <div class="row my-3 align-items-center">
-            <div class="col-2 text-end">
+    <form class="need-validation" method="post">
+        {% csrf_token %}
+        <div class="row my-3">
+            <div class="col-2 text-end my-2">
                 <span>Login</span>
             </div>
             <div class="col-4">
-                <input type="text" class="form-control" value="dr_pepper" required>
+                <input type="text" class="form-control {% if form.username.errors %}is-invalid{% endif %}" name="{{ form.username.html_name }}" value="{{ form.username.value|default_if_none:"" }}" placeholder="example" maxlength="{{ form.username.field.max_length }}" required>
+                <div class="invalid-feedback">
+                    {{ form.username.errors }}
+                </div>
             </div>
         </div>
         <div class="row my-3">
@@ -20,34 +24,43 @@
                 <span>Email</span>
             </div>
             <div class="col-4">
-                <input type="text" class="form-control is-invalid" value="dr.pepper@mail.ru" required>
+                <input type="text" class="form-control {% if form.email.errors %}is-invalid{% endif %}" name="{{ form.email.html_name }}" placeholder="example@example.com" value="{{ form.email.value|default_if_none:"" }}" maxlength="{{ form.email.field.max_length }}" required>
                 <div class="invalid-feedback">
-                    Sorry, this email address is already registered
+                    {{ form.email.errors }}
                 </div>
             </div>
         </div>
-        <div class="row my-3 align-items-center">
-            <div class="col-2 text-end">
-                <span>NickName</span>
+        <div class="row my-3">
+            <div class="col-2 text-end my-2">
+                <span>Nickname</span>
             </div>
             <div class="col-4">
-                <input type="text" class="form-control" value="Dr. Pepper" required>
+                <input type="text" class="form-control {% if form.first_name.errors %}is-invalid{% endif %}" name="{{ form.first_name.html_name }}" placeholder="example name" value="{{ form.first_name.value|default_if_none:"" }}" maxlength="{{ form.first_name.field.max_length }}" required>
+                <div class="invalid-feedback">
+                    {{ form.first_name.errors }}
+                </div>
             </div>
         </div>
-        <div class="row my-3 align-items-center">
-            <div class="col-2 text-end">
+        <div class="row my-3">
+            <div class="col-2 text-end my-2">
                 <span>Password</span>
             </div>
             <div class="col-4">
-                <input type="password" class="form-control" value="password" required>
+                <input type="password" class="form-control {% if form.password.errors %}is-invalid{% endif %}" name="{{ form.password.html_name }}" value="" maxlength="{{ form.password.field.max_length }}" required>
+                <div class="invalid-feedback">
+                    {{ form.password.errors }}
+                </div>
             </div>
         </div>
-        <div class="row my-3 align-items-center">
-            <div class="col-2 text-end">
+        <div class="row my-3">
+            <div class="col-2 text-end my-2">
                 <span>Repeat password</span>
             </div>
             <div class="col-4">
-                <input type="password" class="form-control" value="password" required>
+                <input type="password" class="form-control {% if form.confirm_password.errors %}is-invalid{% endif %}" name="{{ form.confirm_password.html_name }}" value="" maxlength="{{ form.password.field.max_length }}" required>
+                <div class="invalid-feedback">
+                    {{ form.confirm_password.errors }}
+                </div>
             </div>
         </div>
         <div class="row my-3 align-items-center">
@@ -55,7 +68,7 @@
                 <span>Upload avatar</span>
             </div>
             <div class="col-4">
-                <input type="file" class="form-control">
+                <input type="file" class="form-control" name="{{ form.avatar.html_name }}">
             </div>
         </div>
         <div class="row my-3">

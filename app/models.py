@@ -9,18 +9,18 @@ from django.db import models
 # Тег – слово тега.
 
 class Tag(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, unique=True)
 
     def __str__(self):
         return self.name
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="user")
     avatar = models.ImageField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.user.get_username()
+        return self.user.get_short_name()
 
 class QuestionManager(models.Manager):
     def get_new(self):
@@ -37,8 +37,8 @@ class QuestionManager(models.Manager):
         return rating_sum.get("sum", 0)
 
 class Question(models.Model):
-    title = models.CharField(max_length=255)
-    text = models.TextField()
+    title = models.CharField(max_length=50)
+    text = models.TextField(max_length=500)
     author = models.ForeignKey(Profile, on_delete=models.CASCADE)
     tags = models.ManyToManyField(Tag)
     rating = models.IntegerField(default=0)

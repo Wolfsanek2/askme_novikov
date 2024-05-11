@@ -1,35 +1,47 @@
 {% extends "layouts/base.html" %}
 
+{% load static %}
+
 {% block content %}
-    <form class="need-validation">
+    <form class="need-validation" method="post">
+        {% csrf_token %}
         <div class="row">
             <div class="d-flex gap-3 m-3">
                 <h2>Settings:</h2>
-                <h2>Dr. Pepper</h2>
+                <h2>{{ request.user.first_name }}</h2>
             </div>
         </div>
-        <div class="row my-3 align-items-center">
-            <div class="col-2 text-end">
+        <div class="row my-3">
+            <div class="col-2 text-end my-2">
                 <span>Login</span>
             </div>
             <div class="col-6">
-                <input type="text" class="form-control" value="dr_pepper" required>
+                <input type="text" class="form-control {% if form.username.errors %}is-invalid{% endif %}" name="{{ form.username.html_name }}" value="{{ form.username.value }}" maxlength="{{ form.username.field.max_length }}" required>
+                <div class="invalid-feedback">
+                    {{ form.username.errors }}
+                </div>
             </div>
         </div>
-        <div class="row my-3 align-items-center">
-            <div class="col-2 text-end">
+        <div class="row my-3">
+            <div class="col-2 text-end my-2">
                 <span>Email</span>
             </div>
             <div class="col-6">
-                <input type="text" class="form-control" value="dr.pepper@mail.ru">
+                <input type="text" class="form-control {% if form.email.errors %}is-invalid{% endif %}" name="{{ form.email.html_name }}" value="{{ form.email.value }}" maxlength="form.email.field.max_length" required>
+                <div class="invalid-feedback">
+                    {{ form.email.errors }}
+                </div>
             </div>
         </div>
-        <div class="row my-3 align-items-center">
-            <div class="col-2 text-end">
-                <span>NickName</span>
+        <div class="row my-3">
+            <div class="col-2 text-end my-2">
+                <span>Nickname</span>
             </div>
             <div class="col-6">
-                <input type="text" class="form-control" value="Dr. Pepper">
+                <input type="text" class="form-control {% if form.first_name.errors %}is-invalid{% endif %}" name="{{ form.first_name.html_name }}" value="{{ form.first_name.value }}" maxlength="form.first_name.field.max_length">
+                <div class="invalid-feedback">
+                    {{ form.first_name.errors }}
+                </div>
             </div>
         </div>
         <div class="row my-3">
@@ -37,7 +49,7 @@
                 <span>Upload avatar</span>
             </div>
             <div class="col">
-                <img src="" alt="" width="100px" height="100px">
+                <img src="{% static "img/img.jpg" %}" alt="" width="100px" height="100px">
             </div>
         </div>
         <div class="row my-3">

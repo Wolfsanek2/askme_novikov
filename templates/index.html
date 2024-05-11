@@ -1,9 +1,9 @@
 {% extends "layouts/base.html" %}
 
 {% block content %}
-    <div class="d-flex gap-4 align-items-center m-3">
+    <div class="d-flex gap-4 align-items-end m-3">
         <h2>New Questions</h2>
-        <a href="{% url "hot_questions" %}">Hot questions</a>
+        <a href="{% url "hot_questions" %}" class="h5">Hot questions</a>
     </div>
     {% for question in questions %}
         {% include "components/question.html"%}

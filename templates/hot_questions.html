@@ -2,9 +2,9 @@
 {% load static %}
 
 {% block content %}
-    <div class="d-flex gap-4 align-items-center m-3">
+    <div class="d-flex gap-4 align-items-end m-3">
         <h2>Hot questions</h2>
-        <a href="{% url "index" %}">New questions</a>
+        <a href="{% url "index" %}" class="h5">New questions</a>
     </div>
     {% for question in questions %}
         {% include "components/question.html"%}

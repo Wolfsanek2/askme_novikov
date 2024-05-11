@@ -3,13 +3,17 @@
     <h2 class="mx-5 my-3">
         New Question
     </h2>
-    <form class="need-validation">
+    <form class="need-validation" method="post">
+        {% csrf_token %}
         <div class="row">
             <div class="col-1 text-end m-3">
                 <span>Title</span>
             </div>
             <div class="col p-2">
-                <input type="text" class="form-control" value="How to build a moon park?" required>
+                <input type="text" class="form-control {% if form.title.errors %}is-invalid{% endif %}" name="{{ form.title.html_name }}" value="{{ form.title.value|default_if_none:"" }}" placeholder="Enter your title" maxlength="{{ form.title.field.max_length }}" required>
+                <div class="invalid-feedback">
+                    {{ form.title.errors }}
+                </div>
             </div>
         </div>
         <div class="row">
@@ -17,7 +21,10 @@
                 <span>Text</span>
             </div>
             <div class="col p-2">
-                <textarea class="form-control" style="resize: none;" rows="10" maxlength="500" required>Really, how? Have no idea about it.</textarea>
+                <textarea class="form-control {% if form.text.errors %}is-invalid{% endif %}" name="{{ form.text.html_name }}" style="resize: none;" rows="10" placeholder="Enter your text" maxlength="{{ form.text.field.max_length }}" required>{{ form.text.value|default_if_none:"" }}</textarea>
+                <div class="invalid-feedback">
+                    {{ form.text.errors }}
+                </div>
             </div>
         </div>
         <div class="row">
@@ -25,7 +32,10 @@
                 <span>Tags</span>
             </div>
             <div class="col p-2">
-                <input type="text" class="form-control" value="moon, park, puzzle">
+                <input type="text" class="form-control {% if form.tags.errors %}is-invalid{% endif %}" name="{{ form.tags.html_name }}" value="{{ form.tags.value|default_if_none:"" }}" placeholder="Enter up to 3 tags">
+                <div class="invalid-feedback">
+                    {{ form.tags.errors }}
+                </div>
             </div>
         </div>
         <div class="row">
