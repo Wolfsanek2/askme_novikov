@@ -5,6 +5,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib import auth
 from django.urls import reverse
+from django.views.decorators.csrf import csrf_protect
 
 from app.models import *
 from app import models, forms
@@ -18,37 +19,51 @@ QUESTIONS_PER_PAGE = 20
 def index(request):
     questions = models.Question.objects.get_new()
     question_list = paginate(questions, request, per_page=QUESTIONS_PER_PAGE)
+    profile = models.Profile.objects.get_by_user_id(request.user.id)
     context = {
         "questions": question_list,
+        "profile": profile,
     }
     return render(request, "index.html", context)
 
 def hot_questions(request):
     questions = models.Question.objects.get_hot()
     question_list = paginate(questions, request, per_page=QUESTIONS_PER_PAGE)
-    context = {"questions": question_list}
+    profile = models.Profile.objects.filter(user__id=request.user.id).first()
+    context = {
+        "questions": question_list,
+        "profile": profile,
+    }
     return render(request, "hot_questions.html", context)
 
+@csrf_protect
+@login_required(login_url="login", redirect_field_name="continue")
 def settings(request):
-    if not(request.user.is_authenticated):
-        return redirect("index")
     user_id = request.user.id
     profile = models.Profile.objects.filter(user__id=user_id).first()
     if request.method == "POST":
-        settings_form = forms.SettingsForm(data=request.POST, user_id=user_id)
+        settings_form = forms.SettingsForm(data=request.POST, files=request.FILES, user_id=user_id)
         if settings_form.is_valid():
             settings_form.save()
             request.user = profile.user
+            return redirect("settings")
     else:
-        data = {
-            "username": profile.user.username,
-            "email": profile.user.email,
-            "first_name": profile.user.first_name,
-            "avatar": profile.avatar,
-        }
-        settings_form = forms.SettingsForm(data=data, user_id=user_id)
+        try:
+            data = {
+                "username": profile.user.username,
+                "email": profile.user.email,
+                "first_name": profile.user.first_name,
+            }
+            files = {
+                "avatar": profile.avatar,
+            }
+        except:
+            data = {}
+            files = {}
+        settings_form = forms.SettingsForm(data=data, files=files, user_id=user_id)
     context = {
         "form": settings_form,
+        "profile": profile,
     }
     return render(request, "settings.html", context)
 
@@ -63,15 +78,17 @@ def tag(request, tag_name):
         return HttpResponseNotFound("page not found")
     questions = Question.objects.get_by_tag(tag_name)
     questions_list = paginate(questions, request, per_page=20)
+    profile = models.Profile.objects.filter(user__id=request.user.id).first()
     context = {
         "questions": questions_list,
         "tag": tag_name,
+        "profile": profile,
     }
     return render(request, "tag.html", context)
 
+@csrf_protect
+@login_required(login_url="login", redirect_field_name="continue")
 def ask(request):
-    if not(request.user.is_authenticated):
-        return redirect("login")
     if request.method == "POST":
         question_form = forms.QuestionForm(data=request.POST)
         print(question_form.data)
@@ -80,11 +97,14 @@ def ask(request):
             return redirect(f"question", question_id=question.id)
     else:
         question_form = forms.QuestionForm()
+    profile = models.Profile.objects.filter(user__id=request.user.id).first()
     context = {
         "form": question_form,
+        "profile": profile,
     }
     return render(request, "ask.html", context)
 
+@csrf_protect
 def question(request, question_id):
     if request.method == "POST":
         if request.user.is_authenticated:
@@ -105,13 +125,17 @@ def question(request, question_id):
     answer_form = forms.AnswerForm()
     answers = Answer.objects.get_best_for_question(question_id)
     answers_list = paginate(answers, request, per_page=ANSWERS_PER_PAGE)
+    user_id = request.user.id
+    profile = models.Profile.objects.filter(user__id=user_id).first()
     context = {
         "question": question,
         "answers": answers_list,
         "form": answer_form,
+        "profile": profile,
     }
     return render(request, "question.html", context)
 
+@csrf_protect
 def login(request):
     if request.method == "POST":
         login_form = forms.LoginForm(data=request.POST)
@@ -129,9 +153,11 @@ def login(request):
     }
     return render(request, "login.html", context)
 
+@csrf_protect
 def signup(request):
     if request.method == "POST":
-        signup_form = forms.SignupForm(data=request.POST)
+        print(request.FILES)
+        signup_form = forms.SignupForm(data=request.POST, files=request.FILES)
         if signup_form.is_valid():
             profile = signup_form.save()
             if profile:

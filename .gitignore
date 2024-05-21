@@ -1,3 +1,4 @@
 __pycache__/
 askme_venv/
+uploads/
 db.sqlite3

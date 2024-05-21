@@ -5,13 +5,16 @@ class LoginForm(forms.Form):
     username = forms.CharField(max_length=30)
     password = forms.CharField(max_length=30)
 
-class SignupForm(forms.Form):
+class SignupForm(forms.ModelForm):
     username = forms.CharField(max_length=30)
     email = forms.EmailField(max_length=30)
     first_name = forms.CharField(max_length=30)
     password = forms.CharField(max_length=30)
     confirm_password = forms.CharField(max_length=30)
-    avatar = forms.ImageField(required=False)
+
+    class Meta:
+        model = models.Profile
+        fields = ["avatar"]
 
     def clean_username(self):
         username = self.cleaned_data.get("username")
@@ -52,11 +55,14 @@ class SignupForm(forms.Form):
         profile.save()
         return profile
     
-class SettingsForm(forms.Form):
+class SettingsForm(forms.ModelForm):
     username = forms.CharField(max_length=30)
     email = forms.EmailField(max_length=30)
     first_name = forms.CharField(max_length=30)
-    avatar = forms.ImageField(required=False)
+
+    class Meta:
+        model = models.Profile
+        fields = ["avatar"]
 
     def __init__(self, *args, **kwargs):
         self.user_id = kwargs.pop('user_id', None)
@@ -86,6 +92,7 @@ class SettingsForm(forms.Form):
         profile.user.email = self.cleaned_data.get("email")
         profile.user.first_name = self.cleaned_data.get("first_name")
         profile.user.save()
+        profile.avatar = self.cleaned_data.get("avatar")
         profile.save()
         return profile
 

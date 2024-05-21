@@ -14,10 +14,16 @@ class Tag(models.Model):
     def __str__(self):
         return self.name
 
+class ProfileManager(models.Manager):
+    def get_by_user_id(self, user_id):
+        return Profile.objects.filter(user__id=user_id).first()
+
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="user")
-    avatar = models.ImageField(null=True, blank=True)
+    avatar = models.ImageField(upload_to="avatars", default="avatars/avatar.png")
     created_at = models.DateTimeField(auto_now_add=True)
+
+    objects = ProfileManager()
 
     def __str__(self):
         return self.user.get_short_name()

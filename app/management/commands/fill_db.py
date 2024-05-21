@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand, CommandError
 from app.models import *
-from askme_novikov.settings import STATICFILES_DIRS
+from askme_novikov.settings import STATICFILES_DIRS, MEDIA_URL
 from random import randint
 from itertools import islice
 
@@ -50,7 +50,6 @@ class Command(BaseCommand):
                     for j in range(min(batch_size, profiles_number - batch_size * i)):
                         profile = Profile(
                             user=users_batch[j],
-                            avatar=(STATICFILES_DIRS[0] / "img.jpg").as_posix()
                         )
                         yield profile
                     i += 1
