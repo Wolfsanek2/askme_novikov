@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Askme</title>
     <link rel="stylesheet" href="{% static "css/bootstrap.css" %}">
+    {% csrf_token %}
 </head>
 <body>
     <nav class="navbar bg-light">
@@ -102,5 +103,6 @@
             </div>
         </div>
     </main>
+    <script src="{% static "/js/app.js" %}"></script>
 </body>
 </html>

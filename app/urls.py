@@ -14,6 +14,11 @@ urlpatterns = [
     path('question/<question_id>', views.question, name='question'),
     path('login/', views.login, name='login'),
     path('signup/', views.signup, name='signup'),
+    path('question/<question_id>/like', views.question_like, name='question_like'),
+    path('question/<question_id>/dislike', views.question_dislike, name='question_dislike'),
+    path('answer/<answer_id>/like', views.answer_like, name='answer_like'),
+    path('answer/<answer_id>/dislike', views.answer_dislike, name='answer_dislike'),
+    path('answer/<answer_id>/is_correct', views.answer_is_correct, name = 'answer_is_correct'),
 ]
 
 if settings.DEBUG:

@@ -1,6 +1,6 @@
 {% load static %}
 
-<div class="card m-3 p-2">
+<div class="card question-card m-3 p-2" data-question-id="{{ question.id }}">
     <div class="row">
         <div style="width: 120px;">
             <div class="m-1">
@@ -14,10 +14,18 @@
             <p>{{ question.text }}</p>
         </div>
     </div>
-    <div class="row align-items-center">
+    <div class="row align-items-end">
         <div style="width: 120px;">
-            <div class="input-group p-1">
-                <input type="number" value="{{ question.rating }}" class="form-control w-100"> 
+            <div class="input-group p-1 text-center">
+                <input type="text" value="{{ question.rating }}" class="form-control card-counter" style="text-align: center;" disabled>
+                <div>
+                    <button class="btn card-like {% if question in liked_questions %}border-dark{% endif %}" data-question-id="{{ question.id }}" {% if not user.is_authenticated %}disabled{% endif %}>
+                        <img src="{% static "/img/up.webp" %}" width="20px">
+                    </button>
+                    <button class="btn card-dislike {% if question in disliked_questions %}border-dark{% endif %}" data-question-id="{{ question.id }}" {% if not user.is_authenticated %}disabled{% endif %}>
+                        <img src="{% static "/img/down.jpg" %}" width="20px">
+                    </button>
+                </div>
             </div>
         </div>
         <div class="col">
